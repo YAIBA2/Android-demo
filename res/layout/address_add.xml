@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="@drawable/panda">
+
+    <TextView
+        android:id="@+id/address_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="姓名："
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/address_name_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/address_name"
+        android:layout_alignBottom="@+id/address_name"
+        android:layout_alignParentRight="true"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+
+    <TextView
+        android:id="@+id/address_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/address_name_add"
+        android:text="电话:"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/address_phone_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/address_phone"
+        android:layout_alignParentRight="true"
+        android:ems="10" />
+
+    <EditText
+        android:id="@+id/address_email_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/address_phone_add"
+        android:ems="10" />
+
+    <TextView
+        android:id="@+id/address_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/address_email_add"
+        android:text="Email:"
+        android:textSize="25sp" />
+
+    <Button
+        android:id="@+id/address_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/address_email_add"
+        android:layout_marginLeft="56dp"
+        android:layout_marginTop="45dp"
+        android:layout_toRightOf="@+id/update_button"
+        android:text="新建" />
+
+    <Button
+        android:id="@+id/update_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/address_button"
+        android:layout_alignBottom="@+id/address_button"
+        android:layout_toRightOf="@+id/address_email"
+        android:text="更新" />
+
+</RelativeLayout>
