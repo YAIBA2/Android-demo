@@ -133,13 +133,13 @@ public class SmsActivity extends Activity {
 		// TODO Auto-generated method stub
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();  // info.targetView得到list.xml中的LinearLayout对象.  
 		int stuId = (int) info.position;
-		System.out.println(stuId+"mmmmmmm");
+		//System.out.println(stuId+"mmmmmmm");
 		Sms sms2=SmsList.get(stuId);
 		System.out.println(sms2.getcontent()+"11111");
 		if(item.getItemId()==ITEM_DELETE){
 			String comconStr=sms2.getcontent();
 			String comlianxirenStr=sms2.getphone();
-			System.out.println(comconStr+"555555");
+			//System.out.println(comconStr+"555555");
 			ContentResolver cr = getContentResolver();
 			Cursor cursor = cr.query(SMS_INBOX, new String[] { "address", "_id",
 					"body" }, null, null, null);
@@ -151,7 +151,7 @@ public class SmsActivity extends Activity {
 				System.out.println(id+"ppppp");*/
 				// 通过主键值来判断点中的listview中的Item所对应的数据库表中的_id
 				if (comconStr.equals(mbody)) {
-					System.out.println("2222-----------------");
+					//System.out.println("2222-----------------");
 					
 					cursor.close();
 					ContentResolver cr1 = getContentResolver();
