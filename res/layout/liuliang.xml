@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" 
+    android:background="@drawable/panda">
+	
+    <Button
+        android:id="@+id/liuliang_back"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="5dip"
+        android:background="@drawable/back" />
+
+    <TextView
+        android:id="@+id/updatespeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/liuliang_back"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="53dp"
+        android:layout_marginLeft="50dp"
+        android:text="上传速度：0kb/s" />
+
+    <TextView
+        android:id="@+id/downloadspeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/updatespeed"
+        android:layout_alignBottom="@+id/updatespeed"
+        android:layout_marginLeft="36dp"
+        android:layout_toRightOf="@+id/updatespeed"
+        android:text="下载速度：0kb/s" />
+
+    <Button
+        android:id="@+id/liuliang_list"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignBaseline="@+id/liuliang_back"
+        android:layout_alignBottom="@+id/liuliang_back"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/netlist" />
+
+    <Button
+        android:id="@+id/liuliang_setting"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignBottom="@+id/liuliang_list"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/setting" />
+
+    <TextView
+        android:id="@+id/today_liuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/updatespeed"
+        android:layout_below="@+id/liuliang_back"
+        android:text="今日流量(从开机到现在)" />
+
+    <TextView
+        android:id="@+id/today_3Gliuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/today_liuliang"
+        android:layout_below="@+id/today_liuliang"
+        android:layout_marginTop="14dp"
+        android:text="今日已用2G/3G/4G流量：0.00bytes" />
+
+    <TextView
+        android:id="@+id/today_wifiliuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/today_3Gliuliang"
+        android:layout_below="@+id/today_3Gliuliang"
+        android:layout_marginTop="17dp"
+        android:text="今日已用WIFI流量：0.00bytes" />
+
+    <TextView
+        android:id="@+id/month_liuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/today_wifiliuliang"
+        android:layout_below="@+id/today_wifiliuliang"
+        android:layout_marginTop="26dp"
+        android:text="本月流量" />
+
+    <TextView
+        android:id="@+id/month_totalliuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/month_liuliang"
+        android:layout_below="@+id/month_liuliang"
+        android:layout_marginTop="26dp"
+        android:text="本月限制2G/3G/4G流量：0MB" />
+
+    <TextView
+        android:id="@+id/month_3Gliuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/month_totalliuliang"
+        android:layout_below="@+id/month_totalliuliang"
+        android:layout_marginTop="28dp"
+        android:text="本月已用2G/3G/4G流量：0.00bytes" />
+    
+</RelativeLayout>

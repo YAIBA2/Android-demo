@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+   	 <ImageView
+        android:id="@+id/appimage"
+        android:layout_width="50dip"  
+        android:layout_height="50dip"  
+        android:scaleType="fitXY" 
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/file1" />
+
+    <TextView
+        android:id="@+id/appname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/filedate"
+        android:layout_toRightOf="@+id/appimage"
+        android:text="TextView"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/appimage"
+        android:layout_alignLeft="@+id/appname"
+        android:text="TextView"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/totalliuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/download"
+        android:layout_alignBottom="@+id/download"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/download"
+        android:text="TextView"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/update"
+        android:layout_alignBottom="@+id/update"
+        android:layout_marginLeft="30dp"
+        android:layout_toRightOf="@+id/update"
+        android:text="TextView"
+        android:textSize="12sp" />
+
+</RelativeLayout>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/panda" >
+
+    <EditTextPreference
+        android:defaultValue="0"
+        android:dialogTitle="输入设置"
+        android:key="netflow"
+        android:summary="点击输入"
+        android:title="设置流量" 
+        android:numeric="integer"/>
+    <EditTextPreference
+        android:defaultValue="1"
+        android:dialogTitle="输入设置"
+        android:key="startday"
+        android:summary="每月1日"
+        android:title="起始日期(1-31)" 
+        android:numeric="integer"/>
+    <EditTextPreference
+        android:defaultValue="0"
+        android:dialogTitle="输入设置"
+        android:key="jiaozheng"
+        android:summary="默认计入下载流量"
+        android:title="校正流量（MB）" 
+        android:numeric="integer"/>
+
+</PreferenceScreen>

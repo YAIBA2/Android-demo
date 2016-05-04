@@ -49,6 +49,10 @@ public class MainActivity extends Activity {
 					Intent intent2=new Intent(MainActivity.this,FileActivity.class);
 					startActivity(intent2); //显示调用
 					break;
+				case R.drawable.liuliang:
+					Intent intent3=new Intent(MainActivity.this,LiuLiangActivity.class);
+					startActivity(intent3); //显示调用
+					break;
 				default:
 					break;
 				}
@@ -64,6 +68,8 @@ public class MainActivity extends Activity {
 		fruitList.add(contact);
 		Fruit file = new Fruit("文件管理器", R.drawable.file);
 		fruitList.add(file);
+		Fruit liuliang = new Fruit("流量监控", R.drawable.liuliang);
+		fruitList.add(liuliang);
 		/*Fruit orange = new Fruit("Orange", R.drawable.orange_pic);
 		fruitList.add(orange);
 		Fruit watermelon = new Fruit("Watermelon", R.drawable.watermelon_pic);
