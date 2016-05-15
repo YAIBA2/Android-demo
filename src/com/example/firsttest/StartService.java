@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.TrafficStats;
 import android.os.Binder;
@@ -26,6 +27,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.WindowManager;
@@ -43,14 +45,16 @@ public class StartService extends Service implements
 	private long chushiflow;
 	private long limitflow;
 	/*
-	 * private Runnable mTasks = new Runnable() { //第二中设置延迟的方式 public void run()
-	 * { intCounter++;
-	 * 
-	 * notificationManager = (NotificationManager)
-	 * getSystemService(NOTIFICATION_SERVICE); showNotification();
-	 * Log.i("HIPPO", "Counter:" + Integer.toString(intCounter));
-	 * 
-	 * objHandler.postDelayed(mTasks, 5000); } };
+	  private Runnable mTasks = new Runnable() { //第二中设置延迟的方式 
+	  public void run()
+	  { 
+	  notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		showNotification();
+		Message msg = objHandler.obtainMessage();
+		msg.what = 100;
+		objHandler.sendMessage(msg);
+	  objHandler.postDelayed(mTasks, 5000); } 
+	  };
 	 */
 
 	Handler objHandler = new Handler() {
@@ -120,6 +124,7 @@ public class StartService extends Service implements
 		System.out.println("初始时的总流量" + totalflow);
 		System.out.println("初始时的初始流量" + chushiflow);
 		new Timer().schedule(task, 1000, 5000);// 5s刷新
+		//objHandler.post(mTasks);//第二中设置延迟的方式 
 		super.onCreate();
 	}
 
@@ -165,12 +170,13 @@ public class StartService extends Service implements
 		settings.unregisterOnSharedPreferenceChangeListener(this);
 		super.onDestroy();
 	}
+	
 
 	@SuppressWarnings("deprecation")
 	private void showNotification() {
 		long shoujiliuliang = TrafficStats.getMobileRxBytes()
 				+ TrafficStats.getMobileTxBytes();
-		//*API11以上不建议使用
+		/*API11以上不建议使用
 		Notification notification = new Notification(R.drawable.network15,
 				"流量监控中", 0);
 		Intent intent = new Intent(this, LiuLiangActivity.class);
@@ -188,28 +194,35 @@ public class StartService extends Service implements
 		notification.flags |= Notification.FLAG_ONGOING_EVENT;
 		notificationManager.notify(1, notification);
 		//*/
-		/*API15-API11可用
-		 NotificationManager manager = (NotificationManager)getSystemService(
-		 Context.NOTIFICATION_SERVICE); NotificationCompat.Builder builder =
-		 new NotificationCompat.Builder(LiuLiangActivity.this);
-		 builder.setContentTitle("This is content title");
-		 builder.setContentText("This is content text");
-		 builder.setSmallIcon(R.drawable.ic_launcher); Intent intent = new
-		 Intent(LiuLiangActivity.this,LiuLiangActivity.class); PendingIntent
+		//*API15-API11可用
+		 //NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE); 
+		 NotificationCompat.Builder builder =
+		 new NotificationCompat.Builder(StartService.this);
+		 builder.setTicker("流量监控中");
+		 builder.setContentTitle("流量监控");
+		 builder.setContentText("剩余"
+					+ new TextFormat().formatByte(totalflow
+							+ shoujiliuliang - chushiflow) + "/"
+					+ settings.getString("netflow", "") + "MB");
+		 builder.setSmallIcon(R.drawable.network15);
+		 builder.setLargeIcon(BitmapFactory.decodeResource(StartService.this.getResources(), R.drawable.network15));
+		 builder.setWhen(0);
+		 Intent intent = new Intent(this,LiuLiangActivity.class); PendingIntent
 		 pendingIntent =
-		 PendingIntent.getActivity(LiuLiangActivity.this,0,intent
-		 ,PendingIntent.FLAG_CANCEL_CURRENT); //设置通知提示铃声 // Uri sound =
-		 Uri.fromFile(new
-		 File("/system/media/audio/ringtones/Childhood.ogg")); //
-		 builder.setSound(sound); // //设置通知振动,表示让手机通知到来时震动1秒，而后静止1秒，在震动1秒 //
-		 long[] vibrates = {0,1000,1000,1000}; //
-		 builder.setVibrate(vibrates); // //设置通知提示LED灯 //
-		 builder.setLights(Color.BLUE, 1000, 1000); // //设置通知提示默认效果
-		 builder.setDefaults(Notification.DEFAULT_ALL);
+		 PendingIntent.getActivity(this,0,intent
+		 ,PendingIntent.FLAG_CANCEL_CURRENT); 
+		 //设置通知提示铃声 
+		 // Uri sound =Uri.fromFile(newFile("/system/media/audio/ringtones/Childhood.ogg")); //
+		 //builder.setSound(sound); // //设置通知振动,表示让手机通知到来时震动1秒，而后静止1秒，在震动1秒 //
+		 //long[] vibrates = {0,1000,1000,1000}; //
+		 //builder.setVibrate(vibrates); // //设置通知提示LED灯 //
+		 //builder.setLights(Color.BLUE, 1000, 1000); // //设置通知提示默认效果
+		 //builder.setDefaults(Notification.DEFAULT_ALL);
 		 
-		 builder.setContentIntent(pendingIntent); Notification notification =
-		 builder.build(); notification.flags=Notification.FLAG_ONGOING_EVENT;
-		 manager.notify(1, notification);
+		 builder.setContentIntent(pendingIntent); 
+		 Notification notification =builder.build(); 
+		 notification.flags=Notification.FLAG_ONGOING_EVENT;
+		 notificationManager.notify(1, notification);
 		// */
 		
 		/*API15以上

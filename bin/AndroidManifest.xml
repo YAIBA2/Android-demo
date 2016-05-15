@@ -21,6 +21,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />，  
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>  
 
     <application
         android:allowBackup="true"
@@ -64,6 +65,8 @@
         <activity android:name=".LiuLiangActivity" >
         </activity>
         <activity android:name=".LiuLiangListActivity" >
+        </activity>
+        <activity android:name=".AppManagerActivity" >
         </activity>
         <activity android:name=".SettingActivity" android:theme="@style/sys_set_preacitivity">
         </activity>

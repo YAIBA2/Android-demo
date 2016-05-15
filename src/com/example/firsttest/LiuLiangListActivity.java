@@ -11,11 +11,16 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class LiuLiangListActivity extends Activity {
 	private List<Liuliang> lingliangList = new ArrayList<Liuliang>();
@@ -82,6 +87,17 @@ public class LiuLiangListActivity extends Activity {
 					lingliangList);
 			ListView listView = (ListView) findViewById(R.id.liulianglistview);
 			listView.setAdapter(adapter);
+			listView.setOnItemClickListener(new OnItemClickListener() {//单项监听处理打开应用程序信息
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Liuliang a=lingliangList.get(position);
+					Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+					Uri uri = Uri.fromParts("package", a.getPackname(), null);
+					intent.setData(uri);
+					startActivity(intent);
+				}
+			});
 			dialog.dismiss();// 关闭ProgressDialog
 		}
 	};

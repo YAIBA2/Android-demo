@@ -53,6 +53,10 @@ public class MainActivity extends Activity {
 					Intent intent3=new Intent(MainActivity.this,LiuLiangActivity.class);
 					startActivity(intent3); //显示调用
 					break;
+				case R.drawable.appmanage:
+					Intent intent4=new Intent(MainActivity.this,AppManagerActivity.class);
+					startActivity(intent4); //显示调用
+					break;
 				default:
 					break;
 				}
@@ -70,6 +74,8 @@ public class MainActivity extends Activity {
 		fruitList.add(file);
 		Fruit liuliang = new Fruit("流量监控", R.drawable.liuliang);
 		fruitList.add(liuliang);
+		Fruit appmanage = new Fruit("软件管理", R.drawable.appmanage);
+		fruitList.add(appmanage);
 		/*Fruit orange = new Fruit("Orange", R.drawable.orange_pic);
 		fruitList.add(orange);
 		Fruit watermelon = new Fruit("Watermelon", R.drawable.watermelon_pic);

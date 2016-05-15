@@ -10,12 +10,15 @@ import java.util.ArrayList;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -46,6 +49,7 @@ public class FileActivity extends ListActivity {
 	private File lastfile;
 	private static final int ITEM_COPY = 1;
 	private static final int ITEM_PASTE = 2;
+	private ProgressDialog dialog;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -53,68 +57,84 @@ public class FileActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.filemanage);
-		registerForContextMenu(getListView());// 设置长按菜单
-		Button fileBack = (Button) findViewById(R.id.file_back);
-		Button fileEdit = (Button) findViewById(R.id.file_add);
-		fileBack.setOnClickListener(new android.view.View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (lastfile.getParent() != null){
-					showFileDir(lastfile.getParent());
-					getListView().setSelection(position1);//
-				}
-				else
-					FileActivity.this.finish();
-
-			}
-		});
-		fileEdit.setOnClickListener(new android.view.View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (lastfile.canRead() && lastfile.canWrite())
-					fileaddHandle();
-				else {
-					Resources res = getResources();
-					new AlertDialog.Builder(FileActivity.this)
-							.setTitle("Message")
-							.setMessage(res.getString(R.string.no_permission))
-							.setPositiveButton("OK", new OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-
-								}
-							}).show();
-				}
-			}
-		});
-		// 显示文件列表
-		showFileDir(ROOT_PATH);
+		dialog = ProgressDialog.show(FileActivity.this, "加载中...",
+				"正在载入数据......", true);
 		
-		getListView().setOnScrollListener(new OnScrollListener() {  
-			
-			/** 
-			 * 滚动状态改变时调用 
-			 */  
-			@Override  
-			public void onScrollStateChanged(AbsListView view, int scrollState) {  
-				// 不滚动时保存当前滚动到的位置  
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
-					position1 = getListView().getFirstVisiblePosition();  
-				}  
-			}  
-			
-			/** 
-			 * 滚动时调用 
-			 */  
-			@Override  
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {  
-			}  
-		});
-		
-		String apkRoot = "chmod 777 " + getPackageCodePath();
-		SystemManager.RootCommand(apkRoot);
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// 显示文件列表
+				showFileDir(ROOT_PATH);
+				
+				String apkRoot = "chmod 777 " + getPackageCodePath();
+				SystemManager.RootCommand(apkRoot);
+				handler.sendEmptyMessage(0);// 执行耗时的方法之后发送消给handler
+			}
+		}).start();
 	}
+	
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {// handler接收到消息后就会执行此方法
+			registerForContextMenu(getListView());// 设置长按菜单
+			Button fileBack = (Button) findViewById(R.id.file_back);
+			Button fileEdit = (Button) findViewById(R.id.file_add);
+			fileBack.setOnClickListener(new android.view.View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (lastfile.getParent() != null){
+						showFileDir(lastfile.getParent());
+						getListView().setSelection(position1);//
+					}
+					else
+						FileActivity.this.finish();
+
+				}
+			});
+			fileEdit.setOnClickListener(new android.view.View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					if (lastfile.canRead() && lastfile.canWrite())
+						fileaddHandle();
+					else {
+						Resources res = getResources();
+						new AlertDialog.Builder(FileActivity.this)
+								.setTitle("Message")
+								.setMessage(res.getString(R.string.no_permission))
+								.setPositiveButton("OK", new OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+
+									}
+								}).show();
+					}
+				}
+			});
+			
+			getListView().setOnScrollListener(new OnScrollListener() {  
+				
+				/** 
+				 * 滚动状态改变时调用 
+				 */  
+				@Override  
+				public void onScrollStateChanged(AbsListView view, int scrollState) {  
+					// 不滚动时保存当前滚动到的位置  
+					if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {  
+						position1 = getListView().getFirstVisiblePosition();  
+					}  
+				}  
+				
+				/** 
+				 * 滚动时调用 
+				 */  
+				@Override  
+				public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {  
+				}  
+			});
+			dialog.dismiss();// 关闭ProgressDialog
+		}
+	};
 
 	private void showFileDir(String path) {
 		names = new ArrayList<String>();
