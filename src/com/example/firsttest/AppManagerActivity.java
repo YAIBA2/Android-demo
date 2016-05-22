@@ -1,18 +1,12 @@
 package com.example.firsttest;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
-
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,7 +20,10 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PackageStats;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -63,7 +60,6 @@ public class AppManagerActivity extends Activity {
 	private AppManagerAdapter adapter;
 	// 被点击的条目 所代表的对象
 	private static AppInfo appinfo;
-
 	private TextView tv_app_manager_status;
 	private LayoutInflater infater; 
 	@Override
@@ -205,6 +201,15 @@ public class AppManagerActivity extends Activity {
 		for(PackageInfo packinfo: packinfos){
 			AppInfo appinfo = new AppInfo();
 			String packname = packinfo.packageName;
+			try {
+				PackageInfo pkgInfo = pm.getPackageInfo(packname,  
+				        PackageManager.GET_PERMISSIONS);
+				String sharedPkgList[] = pkgInfo.requestedPermissions;
+				appinfo.setAuthority(sharedPkgList);
+			} catch (NameNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			appinfo.setPackname(packname);
 			String version = packinfo.versionName;
 			appinfo.setVersion(version);
@@ -362,13 +367,16 @@ public class AppManagerActivity extends Activity {
 				else if (which==3){
 					turnmarketApk();
 				}
-				else{
+				else if (which==4){
 					getdetail();
+				}
+				else{
+					getauthority();
 				}
 			}
 		};
 		// 选择文件时，弹出增删该操作选项对话框
-		String[] menu = { "打开", "卸载", "详情","跳转市场","大小信息"};
+		String[] menu = { "打开", "卸载", "详情","跳转市场","大小信息","权限信息"};
 		new AlertDialog.Builder(AppManagerActivity.this).setTitle("请选择要进行的操作")
 				.setItems(menu, listener)
 				.setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -403,7 +411,7 @@ public class AppManagerActivity extends Activity {
 
 	}
 	private void detailApk() {
-		// 获取当前应用程序的应用信息.
+		//获取当前应用程序的应用信息.
 				Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 				Uri uri = Uri.fromParts("package", appinfo.getPackname(), null);
 				intent.setData(uri);
@@ -456,6 +464,56 @@ public class AppManagerActivity extends Activity {
 		builder.setTitle(appinfo.getName()+"的大小信息为：") ;
 		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.cancel() ;  // 取消显示对话框
+			}
+			
+		});
+		builder.create().show() ;
+	}
+	/**
+	 * @throws NameNotFoundException 
+	 * 作用：获取应用权限
+	 */
+	private void getauthority(){
+		infater = (LayoutInflater) AppManagerActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View dialog = infater.inflate(R.layout.appauthority, null) ;
+		TextView tvauthority =(TextView) dialog.findViewById(R.id.authority) ; //缓存大小
+		String sharedPkgList[]=appinfo.getAuthority();
+		try {
+			PackageManager pm = getApplicationContext().getPackageManager(); 
+		 for (int i = 0; i < sharedPkgList.length; i++) {  
+             String permName = sharedPkgList[i];  
+             tvauthority.append(i + "-" + permName + "\n");  
+             try{
+             PermissionInfo tmpPermInfo;
+				tmpPermInfo = pm.getPermissionInfo(permName, 0);
+             PermissionGroupInfo pgi = pm.getPermissionGroupInfo(  
+                   tmpPermInfo.group, 0);//权限分为不同的群组，通过权限名，我们得到该权限属于什么类型的权限。         
+             tvauthority.append(i + "-" + pgi.loadLabel(pm).toString() + "\n");  
+             tvauthority.append(i + "-" + tmpPermInfo.loadLabel(pm).toString()+ "\n");  
+             tvauthority.append(i + "-" + tmpPermInfo.loadDescription(pm).toString()+ "\n");  
+             tvauthority.append("\n");  
+             }
+             catch(NameNotFoundException e){
+            	 tvauthority.append("\n");
+            	 Log.e("##ddd", "Could'nt retrieve permissions for package");  
+            	 //Toast.makeText(getBaseContext(), "存在未知权限信息，无法获取说明!", Toast.LENGTH_SHORT).show();
+             }
+		 }//通过permName得到该权限的详细信息  
+         }  
+	catch (NullPointerException e){
+		 tvauthority.setText("无权限声明");
+		 //Toast.makeText(getBaseContext(), "没有声明权限", Toast.LENGTH_SHORT).show();
+	}
+		//显示自定义对话框
+		AlertDialog.Builder builder =new AlertDialog.Builder(AppManagerActivity.this) ;
+		builder.setView(dialog) ;
+		builder.setTitle(appinfo.getName()+"的权限信息为：") ;
+		builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub

@@ -7,6 +7,7 @@ public class AppInfo {
 	private String name;
 	private String packname;
 	private String version;
+	private String[] authority;
 	private long time;
 	public long cachesize;          // 缓存大小
     public long codesize;           //应用程序大小
@@ -81,6 +82,12 @@ public class AppInfo {
 	}
 	public void setVersion(String version) {
 		this.version = version;
+	}
+	public String[] getAuthority() {
+		return authority;
+	}
+	public void setAuthority(String[] authority) {
+		this.authority = authority;
 	}
 	public boolean isInrom() {
 		return inrom;

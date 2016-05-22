@@ -22,6 +22,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />，  
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE"/>  
+    <uses-permission android:name="android.permission.unstall_package"/>
 
     <application
         android:allowBackup="true"
