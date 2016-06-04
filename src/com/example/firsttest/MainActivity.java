@@ -57,6 +57,14 @@ public class MainActivity extends Activity {
 					Intent intent4=new Intent(MainActivity.this,AppManagerActivity.class);
 					startActivity(intent4); //显示调用
 					break;
+				case R.drawable.processmanage:
+					Intent intent5=new Intent(MainActivity.this,ProcessManagerActivity.class);
+					startActivity(intent5); //显示调用
+					break;
+				case R.drawable.location:
+					Intent intent6=new Intent(MainActivity.this,LocationActivity.class);
+					startActivity(intent6); //显示调用
+					break;
 				default:
 					break;
 				}
@@ -76,6 +84,10 @@ public class MainActivity extends Activity {
 		fruitList.add(liuliang);
 		Fruit appmanage = new Fruit("软件管理", R.drawable.appmanage);
 		fruitList.add(appmanage);
+		Fruit processmanage = new Fruit("进程管理", R.drawable.processmanage);
+		fruitList.add(processmanage);
+		Fruit location = new Fruit("位置服务", R.drawable.location);
+		fruitList.add(location);
 		/*Fruit orange = new Fruit("Orange", R.drawable.orange_pic);
 		fruitList.add(orange);
 		Fruit watermelon = new Fruit("Watermelon", R.drawable.watermelon_pic);

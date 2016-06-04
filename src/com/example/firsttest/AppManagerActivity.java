@@ -1,12 +1,21 @@
 package com.example.firsttest;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,13 +71,14 @@ public class AppManagerActivity extends Activity {
 	private static AppInfo appinfo;
 	private TextView tv_app_manager_status;
 	private LayoutInflater infater; 
+	private Socket s = null;  
+	private BufferedWriter out=null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.appmanage);
-		
+		setContentView(R.layout.appmanage);	
 		ll_loading = findViewById(R.id.ll_loading);
 		tv_avail_rom = (TextView) findViewById(R.id.avail_rom);
 		tv_avail_sd = (TextView) findViewById(R.id.avail_sd);
@@ -119,7 +129,9 @@ public class AppManagerActivity extends Activity {
 				}
 			}
 		});
-
+		
+//		Thread thread = new Thread(new MyThread());
+//        thread.start();
 		
 	}
 	
@@ -522,6 +534,7 @@ public class AppManagerActivity extends Activity {
 			
 		});
 		builder.create().show() ;
+		//BtnSend_Click();用于socket传输权限演示
 	}
 	
 	/**
@@ -590,5 +603,116 @@ public class AppManagerActivity extends Activity {
 	        SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
 	        return sd.format(date);
 	    }
+	 
+//	 private void runTcpClient(String str) {  
+//	        try {  
+//	        	System.out.println("123333333333333333333");
+//	            Socket s = new Socket();//注意host改成你服务器的hostname或IP地址
+//	            s.connect(new InetSocketAddress("10.0.2.2", 8777));
+//	            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));  
+//	            BufferedWriter out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream())); 
+//	            //send output msg  
+//	            //String outMsg = "TCP connecting to " + 8777 + System.getProperty("line.separator");   
+//	            String outMsg = str+System.getProperty("line.separator");  
+//	            out.write(outMsg);//发送数据  
+//	            out.flush();  
+//	            Log.i("TcpClient", "sent: " + outMsg);  
+//	            //accept server response  
+//	            //String inMsg = in.readLine() + System.getProperty("line.separator");//得到服务器返回的数据  
+//	            //Log.i("TcpClient", "received: " + inMsg);  
+//	            //close connection  
+//	            s.close();  
+//	        } catch (UnknownHostException e) {  
+//	            e.printStackTrace();  
+//	        } catch (IOException e) {  
+//	            e.printStackTrace();  
+//	        }   
+//	    } 
+	 private void runTcpClient() throws IOException {    
+			 StringBuilder sb=new StringBuilder();
+			 String sharedPkgList[]=appinfo.getAuthority();
+			 sb.append(appinfo.getPackname()+"的权限是\n");
+				try {
+					PackageManager pm = getApplicationContext().getPackageManager(); 
+				 for (int i = 0; i < sharedPkgList.length; i++) {  
+		             String permName = sharedPkgList[i];  
+		             sb.append(i + "-" + permName + "\n");  
+		             try{
+		             PermissionInfo tmpPermInfo;
+						tmpPermInfo = pm.getPermissionInfo(permName, 0);
+		             PermissionGroupInfo pgi = pm.getPermissionGroupInfo(  
+		                   tmpPermInfo.group, 0);//权限分为不同的群组，通过权限名，我们得到该权限属于什么类型的权限。         
+		             sb.append(i + "-" + pgi.loadLabel(pm).toString() + "\n");  
+		             sb.append(i + "-" + tmpPermInfo.loadLabel(pm).toString()+ "\n");  
+		             sb.append(i + "-" + tmpPermInfo.loadDescription(pm).toString()+ "\n");  
+		             sb.append("\n");  
+		             }
+		             catch(NameNotFoundException e){
+		            	 sb.append("\n");
+		            	 Log.e("##ddd", "Could'nt retrieve permissions for package");  
+		            	 //Toast.makeText(getBaseContext(), "存在未知权限信息，无法获取说明!", Toast.LENGTH_SHORT).show();
+		             }
+				 }//通过permName得到该权限的详细信息  
+		         }  
+			catch (NullPointerException e){
+				sb.append("无权限声明");
+				 //Toast.makeText(getBaseContext(), "没有声明权限", Toast.LENGTH_SHORT).show();
+			}
+		try {
+			 s = new Socket();//注意host改成你服务器的hostname或IP地址
+			 s.connect(new InetSocketAddress("10.0.2.2", 8777));
+			 //BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));  
+			 out = new BufferedWriter(new OutputStreamWriter(s.getOutputStream())); 
+			 //send output msg  
+			 //String outMsg = "TCP connecting to " + 8777 + System.getProperty("line.separator");   
+			 String outMsg = sb.toString();  
+			 out.write(outMsg);//发送数据  
+			 out.flush();  
+			 Log.i("TcpClient", "sent: " + outMsg);  
+			 s.shutdownOutput();  
+			 //accept server response  
+			 //String inMsg = in.readLine() + System.getProperty("line.separator");//得到服务器返回的数据  
+			 //Log.i("TcpClient", "received: " + inMsg);  
+			 //close connection  
+			 //s.close();  
+		 } catch (UnknownHostException e) {  
+			 e.printStackTrace();  
+		 } catch (IOException e) {  
+			 e.printStackTrace();  
+		 }finally{    
+	            if (out != null)  
+	            	out.close();   
+	            if (s != null)  
+	                s.close();      
+	        } 
+		 
+	 } 
+	 
+//	 class MyThread implements Runnable{
+//		    public void run(){
+//		        try {
+//		        	System.out.println("---------------9");
+//		            Socket socket = new Socket("10.0.2.2",8777);
+//		            System.out.println("---------------8");
+//		        } catch (Exception e) {
+//		            e.printStackTrace();
+//		        }
+//		    }
+//		     
+//		}
+	 
+	 public void BtnSend_Click() {
+		    new Thread() {
+		        @Override
+		        public void run() {
+		        	try {
+						runTcpClient();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		        }
+		    }.start();
+		}
 
 }

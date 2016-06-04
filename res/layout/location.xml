@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" 
+    android:layout_height="fill_parent"
+    android:scrollbars="vertical"
+    android:background="@drawable/panda">
+	<LinearLayout 
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:orientation="vertical" 
+	    >
+	
+	    <Button
+	        android:id="@+id/btn_start"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" 
+	        android:layout_marginTop="20dp"
+	        android:text="百度API Start"
+	        android:background="#00000000"/>
+	
+	    <TextView
+	        android:id="@+id/tv_loc_info"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+	    
+	    <Button
+	        android:id="@+id/btn_start1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" 
+	        android:layout_marginTop="20dp"
+	        android:text="系统GPS"
+	        android:background="#00000000"/>
+	
+	    <TextView
+	        android:id="@+id/tv_loc_info1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:textSize="18sp" />
+
+	</LinearLayout>
+</ScrollView>

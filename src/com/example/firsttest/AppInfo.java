@@ -8,6 +8,8 @@ public class AppInfo {
 	private String packname;
 	private String version;
 	private String[] authority;
+	private int id;
+	private long memory;
 	private long time;
 	public long cachesize;          // 缓存大小
     public long codesize;           //应用程序大小
@@ -102,6 +104,22 @@ public class AppInfo {
 		this.userapp = userapp;
 	}
 	
-	
+	public int getId()  
+    {  
+        return id;  
+    }  
+    public void setId(int id)  
+    {  
+        this.id = id;  
+    }  
+    
+    public long getMemory()  
+    {  
+        return memory;  
+    }  
+    public void setMemory(long memory)  
+    {  
+        this.memory = memory; 
+    }
 	
 }
